@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -118,7 +120,8 @@ public class EmployeeController {
 	}
 
 	@GetMapping("/bookingInfoByDate/{reportingDoctor}/{specialization}")
-	public List<BookingDetails> retreivePatientBookingInfo(@PathVariable String reportingDoctor, @PathVariable String specialization, @RequestParam Date dateOfBooking) {
-		return bookingDetailsRepository.findByReportingDoctorAndSpecializationAndDateOfAppointment(reportingDoctor, specialization, dateOfBooking);
+	public List<BookingDetails> retreivePatientBookingInfo(@PathVariable String reportingDoctor, @PathVariable String specialization, @RequestParam String dateOfBooking) throws ParseException {
+		Date date1 = new SimpleDateFormat("yyyy-MM-dd").parse(dateOfBooking);
+		return bookingDetailsRepository.findByReportingDoctorAndSpecializationAndDateOfAppointment(reportingDoctor, specialization, date1);
 	}
 }

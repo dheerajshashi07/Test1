@@ -22,7 +22,7 @@ public class PatientDetailsRepoClass implements PatientDetailsRepository {
     private JdbcTemplate jdbcTemplate;
 
     public List<PatientDetails> findAll() {
-        return namedParameterJdbcTemplate.query("select * from PatientDetails",
+        return namedParameterJdbcTemplate.query("select * from PATIENT_DETAILS",
                 (rs, rowNum) ->
                         new PatientDetails(
                                 rs.getLong("id"),
