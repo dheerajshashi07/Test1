@@ -1,23 +1,5 @@
 package com.example.controller;
 
-import com.example.exception.ResourceNotAvailableException;
-import com.example.model.BookingDetails;
-import com.example.model.Employee;
-import com.example.model.PatientDetails;
-import com.example.model.User;
-import com.example.registration.repository.BookingDetailsRepository;
-import com.example.registration.repository.PatientDetailsRepository;
-import com.example.registration.service.NotificationService;
-import com.example.repository.EmployeeRepository;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.ResponseEntity;
-import org.springframework.mail.MailException;
-import org.springframework.web.bind.annotation.*;
-
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -39,11 +21,33 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.exception.ResourceNotAvailableException;
+import com.example.model.BookingDetails;
+import com.example.model.Employee;
+import com.example.model.PatientDetails;
+import com.example.model.User;
+import com.example.registration.repository.BookingDetailsRepository;
+import com.example.registration.repository.PatientDetailsRepository;
+import com.example.repository.EmployeeRepository;
+
 @RestController
 @RequestMapping("/api")
 public class EmployeeController {
 
-	private Logger logger = LoggerFactory.getLogger(EmployeeController.class);
+	
 	@Autowired
 	private EmployeeRepository employeeRepository;
 	@Autowired
@@ -53,8 +57,6 @@ public class EmployeeController {
 	private BookingDetailsRepository bookingDetailsRepository;
 
 	
-	@Autowired
-	private NotificationService notificationService;
 	// get all employees
 	@GetMapping("/employees")
 	public List<Employee> getAllEmployees() {
