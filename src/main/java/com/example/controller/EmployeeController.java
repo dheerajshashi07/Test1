@@ -4,25 +4,46 @@ import com.example.exception.ResourceNotAvailableException;
 import com.example.model.BookingDetails;
 import com.example.model.Employee;
 import com.example.model.PatientDetails;
+import com.example.model.User;
 import com.example.registration.repository.BookingDetailsRepository;
 import com.example.registration.repository.PatientDetailsRepository;
+import com.example.registration.service.NotificationService;
 import com.example.repository.EmployeeRepository;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailException;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
+
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 
 @RestController
 @RequestMapping("/api")
 public class EmployeeController {
 
+	private Logger logger = LoggerFactory.getLogger(EmployeeController.class);
 	@Autowired
 	private EmployeeRepository employeeRepository;
 	@Autowired
@@ -31,6 +52,9 @@ public class EmployeeController {
 	@Autowired
 	private BookingDetailsRepository bookingDetailsRepository;
 
+	
+	@Autowired
+	private NotificationService notificationService;
 	// get all employees
 	@GetMapping("/employees")
 	public List<Employee> getAllEmployees() {
@@ -123,5 +147,45 @@ public class EmployeeController {
 	public List<BookingDetails> retreivePatientBookingInfo(@PathVariable String reportingDoctor, @PathVariable String specialization, @RequestParam String dateOfBooking) throws ParseException {
 		Date date1 = new SimpleDateFormat("yyyy-MM-dd").parse(dateOfBooking);
 		return bookingDetailsRepository.findByReportingDoctorAndSpecializationAndDateOfAppointment(reportingDoctor, specialization, date1);
+	}
+	
+	
+	private void sendmail(User user) throws AddressException, MessagingException, IOException { 
+		   Properties props = new Properties();
+		   props.put("mail.smtp.auth", "true");
+		   props.put("mail.smtp.starttls.enable", "true");
+		   props.put("mail.smtp.host", "smtp.gmail.com");
+		   props.put("mail.smtp.port", "587");
+		   
+		   Session session = Session.getInstance(props, new javax.mail.Authenticator() {
+		      protected PasswordAuthentication getPasswordAuthentication() {
+		         return new PasswordAuthentication("starsproject2021@gmail.com", "Lakumarapu1995!");
+		      }
+		   });
+		   Message msg = new MimeMessage(session);
+		   msg.setFrom(new InternetAddress("starsproject2021@gmail.com", false));
+
+		   msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse("l.kunni@gmail.com"));
+		   msg.setSubject("Tutorials point email");
+		   msg.setContent("Your appointment has been confirmed successfully", "text/html");
+		   msg.setSentDate(new Date());
+
+		   MimeBodyPart messageBodyPart = new MimeBodyPart();
+		   messageBodyPart.setContent("Tutorials point email", "text/html");
+
+		   Multipart multipart = new MimeMultipart();
+		   multipart.addBodyPart(messageBodyPart);
+		   msg.setContent(multipart);
+		   Transport.send(msg);   
+		}
+	
+	
+	@RequestMapping(value = "/sendemail")
+	public String sendEmail() throws AddressException, MessagingException, IOException {
+		User user = new User();
+		user.setName("santhu");
+		user.setEmail("l.kunni@gmail.com");
+	   sendmail(user);
+	   return "Email sent successfully";   
 	}
 }
