@@ -63,6 +63,12 @@ public class EmployeeController {
 		return employeeRepository.findAll();
 	}
 
+	// get all employees
+	@GetMapping("/employeesByRole")
+	public List<Employee> getEmployeesByRole(@RequestParam("roleName") String roleName) {
+		return employeeRepository.findAllByRole(roleName);
+	}
+
 	//creating employee
 	@PostMapping("/createEmployee")
 	public Employee createEmployee(@RequestBody Employee employee) {
