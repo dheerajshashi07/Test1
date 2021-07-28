@@ -5,7 +5,7 @@ phases:
      - echo Entered build phase
      - mvn clean package
  post_build:
-     - echo build completed sucessfully
+     - echo Build completed sucessfully
  artifacts:
    files:
       -target/empyyy.jar
