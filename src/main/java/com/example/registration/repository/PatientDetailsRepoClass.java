@@ -22,7 +22,7 @@ public class PatientDetailsRepoClass implements PatientDetailsRepository {
     private JdbcTemplate jdbcTemplate;
 
     public List<PatientDetails> findAll() {
-        return namedParameterJdbcTemplate.query("select * from PATIENT_DETAILS",
+        return namedParameterJdbcTemplate.query("select * from patient_details",
                 (rs, rowNum) ->
                         new PatientDetails(
                                 rs.getLong("id"),
@@ -35,7 +35,7 @@ public class PatientDetailsRepoClass implements PatientDetailsRepository {
     }
 
     public List<PatientDetails> findPatientDetailsListForDoctor(String doctorName) {
-        return namedParameterJdbcTemplate.query("select * from PATIENT_DETAILS where reporting_doctor = :doctorName",
+        return namedParameterJdbcTemplate.query("select * from patient_details where reporting_doctor = :doctorName",
                 new MapSqlParameterSource("doctorName", doctorName),
                 (rs, rowNum) ->
                         new PatientDetails(
@@ -55,7 +55,7 @@ public class PatientDetailsRepoClass implements PatientDetailsRepository {
         params1.addValue("emailId", emailId);
         params1.addValue("password", password);
 
-        return namedParameterJdbcTemplate.query("select * from PATIENT_DETAILS where role = :role and email_id = :emailId and password = :password",
+        return namedParameterJdbcTemplate.query("select * from patient_details where role = :role and email_id = :emailId and password = :password",
                 params1,
                 new ResultSetExtractor<PatientDetails>() {
 
@@ -79,7 +79,7 @@ public class PatientDetailsRepoClass implements PatientDetailsRepository {
     @Override
     public int save(PatientDetails patientDetails) {
         return jdbcTemplate.update(
-                "insert into PATIENT_DETAILS (id, email_id, reporting_doctor, mobile_number,password,user_name,role,gender) values(?,?,?,?,?,?,?,?)",
+                "insert into patient_details (id, email_id, reporting_doctor, mobile_number,password,user_name,role,gender) values(?,?,?,?,?,?,?,?)",
                 patientDetails.getId(), patientDetails.getEmailId(), patientDetails.getReportingDoctor(), patientDetails.getMobileNumber(), patientDetails.getPassword(), patientDetails.getUserName(), patientDetails.getRole(), patientDetails.getGender());
     }
 }
