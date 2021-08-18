@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -173,26 +174,21 @@ public class EmployeeController {
 		   Message msg = new MimeMessage(session);
 		   msg.setFrom(new InternetAddress("starsproject2021@gmail.com", false));
 
-		   msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse("l.kunni@gmail.com"));
-		   msg.setSubject("Tutorials point email");
-		   msg.setContent("Your appointment has been confirmed successfully", "text/html");
+		   msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(user.getEmailId()));
+		   msg.setSubject("Appointment Booked");
+		   msg.setContent("Your appointment has been confirmed successfully"+user.getUserName(), "text/html");
 		   msg.setSentDate(new Date());
 
 		   MimeBodyPart messageBodyPart = new MimeBodyPart();
-		   messageBodyPart.setContent("Tutorials point email", "text/html");
+		   messageBodyPart.setContent("Dear "+user.getUserName()+" Your appointment has been booked with the doctor of Your Choice at Stars Hospital. Feel free to contact 4372240545 for any queries ", "text/html");
 
 		   Multipart multipart = new MimeMultipart();
 		   multipart.addBodyPart(messageBodyPart);
 		   msg.setContent(multipart);
 		   Transport.send(msg);   
 		}
-	
-	
-	@RequestMapping(value = "/sendemail")
-	public String sendEmail() throws AddressException, MessagingException, IOException {
-		User user = new User();
-		user.setName("santhu");
-		user.setEmail("l.kunni@gmail.com");
+	@RequestMapping(value = "/sendemail", method = RequestMethod.POST)
+	public String sendEmail(@RequestBody User user) throws AddressException, MessagingException, IOException {
 	   sendmail(user);
 	   return "Email sent successfully";   
 	}
