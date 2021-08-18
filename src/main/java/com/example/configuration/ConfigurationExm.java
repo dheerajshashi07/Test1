@@ -10,7 +10,7 @@ public class ConfigurationExm implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedOrigins("http://localhost:4200")
-                .allowedMethods("GET", "POST", "PUT")
+                .allowedMethods("GET", "POST", "PUT","DELETE")
                 .allowCredentials(false).maxAge(3600);
 
     }
