@@ -29,7 +29,7 @@ public class RegistrationController {
 		if (tempEmailId != null && !"".equals(tempEmailId)) {
 			Employee userObj = service.fetchUserBYEmailId(tempEmailId);
 			if (userObj != null) {
-				throw new Exception("user with " + tempEmailId + " already exists");
+				throw new Exception("user with " + tempEmailId + "are already existsed");
 			}
 		}
 		Employee userobj = null;
